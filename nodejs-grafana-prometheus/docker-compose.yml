@@ -1,5 +1,12 @@
-version: "3"
+version: '3'
 services:
+  indexjs-service:
+    build: .
+    ports:
+      - "3002:3002"  # Ajusta el puerto para las métricas
+    networks:
+      - localprom
+
   prometheus:
     image: prom/prometheus
     ports:
@@ -11,6 +18,8 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - localprom
+    depends_on:
+      - indexjs-service
 
   grafana:
     image: grafana/grafana
@@ -26,6 +35,3 @@ services:
 networks:
   localprom:
     driver: bridge
-
-# docker-compose up -d (Start services)
-# docker-compose down (Down services)
